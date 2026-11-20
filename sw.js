@@ -1,5 +1,5 @@
 // Meu Amor — funciona sem internet. Troque o nome do cache a cada versão.
-const CACHE = 'meu-amor-v1.0';
+const CACHE = 'meu-amor-v1.1';
 const ARQS = ['./', 'index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'icon-maskable.png'];
 
 self.addEventListener('install', e => {
