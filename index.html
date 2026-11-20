@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cut, interactive-widget=resizes-content">
+<title>Meu Amor</title>
+<meta name="theme-color" content="#c2416b">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{
+  --rosa:#c2416b; --rosa2:#8e3a8f; --bg:#f7f1f3; --card:#fff; --tx:#2a1f24; --mut:#7d6c73;
+  --eu:#c2416b; --eu-tx:#fff; --ele:#ffffff; --ele-tx:#2a1f24; --linha:#ead9df; --campo:#fbf7f8;
+}
+@media (prefers-color-scheme:dark){
+  :root{ --bg:#17111a; --card:#231a26; --tx:#f3e9ee; --mut:#a8949f; --ele:#2c2130; --ele-tx:#f3e9ee; --linha:#3a2c3e; --campo:#1d1520; }
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--tx);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+body{display:flex;flex-direction:column;height:100dvh;overflow:hidden}
+button{font:inherit;cursor:pointer}
+header{display:flex;align-items:center;gap:12px;padding:10px 12px;padding-top:max(10px,env(safe-area-inset-top));
+  background:linear-gradient(120deg,var(--rosa),var(--rosa2));color:#fff;box-shadow:0 2px 10px #0003;z-index:2}
+.av{width:44px;height:44px;border-radius:50%;flex:none;background:#fff3 center/cover;display:grid;place-items:center;font-weight:700;font-size:20px;border:2px solid #fff8}
+header .info{flex:1;min-width:0}
+header .nome{font-weight:700;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+header .status{font-size:13px;opacity:.9}
+.ib{background:none;border:0;color:inherit;font-size:22px;width:42px;height:42px;border-radius:50%}
+.ib:active{background:#fff3}
+#chat{flex:1;overflow-y:auto;padding:12px 10px 6px;display:flex;flex-direction:column;gap:4px;overscroll-behavior:contain}
+.dia{align-self:center;font-size:12px;color:var(--mut);background:var(--card);padding:3px 10px;border-radius:10px;margin:10px 0 4px;box-shadow:0 1px 2px #0001}
+.msg{max-width:84%;padding:8px 11px 5px;border-radius:16px;white-space:pre-wrap;word-wrap:break-word;box-shadow:0 1px 2px #0002;position:relative}
+.msg.eu{align-self:flex-end;background:var(--eu);color:var(--eu-tx);border-bottom-right-radius:5px}
+.msg.ele{align-self:flex-start;background:var(--ele);color:var(--ele-tx);border-bottom-left-radius:5px}
+.msg em{opacity:.8}
+.msg .h{display:block;text-align:right;font-size:11px;opacity:.65;margin-top:2px}
+.msg.sel{outline:2px solid var(--rosa2)}
+.digit{display:inline-flex;gap:4px;padding:4px 2px}
+.digit i{width:7px;height:7px;border-radius:50%;background:var(--mut);animation:pu 1.2s infinite}
+.digit i:nth-child(2){animation-delay:.2s}.digit i:nth-child(3){animation-delay:.4s}
+@keyframes pu{0%,60%,100%{opacity:.25;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}
+.aviso{align-self:center;max-width:92%;text-align:center;font-size:14px;color:var(--mut);background:var(--card);border:1px dashed var(--linha);padding:10px 12px;border-radius:12px;margin:8px 0}
+.aviso button{margin-top:8px}
+footer{display:flex;gap:8px;align-items:flex-end;padding:8px 10px;padding-bottom:max(8px,env(safe-area-inset-bottom));background:var(--bg)}
+#txt{flex:1;resize:none;min-height:46px;border:1px solid var(--linha);background:var(--card);color:var(--tx);border-radius:22px;padding:11px 15px;font:inherit;max-height:140px;outline:none}
+#txt:focus{border-color:var(--rosa)}
+#env{width:46px;height:46px;border-radius:50%;border:0;background:var(--rosa);color:#fff;font-size:20px;flex:none}
+#env:disabled{opacity:.45}
+.via{align-self:flex-start;font-size:11px;color:var(--mut);margin:-1px 0 4px 6px}
+/* folhas */
+.folha{position:fixed;inset:0;background:var(--bg);z-index:10;display:none;flex-direction:column}
+.folha.on{display:flex}
+.folha header{background:var(--card);color:var(--tx);box-shadow:0 1px 0 var(--linha)}
+.folha .corpo{flex:1;overflow-y:auto;padding:12px 14px 40px}
+.sec{background:var(--card);border-radius:16px;padding:14px;margin-bottom:14px;box-shadow:0 1px 3px #0001}
+.sec h3{margin:0 0 10px;font-size:16px}
+label{display:block;font-size:13px;color:var(--mut);margin:10px 0 4px}
+input[type=text],input[type=password],textarea,select{width:100%;border:1px solid var(--linha);background:var(--campo);color:var(--tx);border-radius:10px;padding:10px;font:inherit}
+textarea{resize:vertical;min-height:70px}
+.dica{font-size:13px;color:var(--mut);margin:6px 0 0}
+.bt{border:0;border-radius:12px;padding:11px 14px;background:var(--rosa);color:#fff;font-weight:600}
+.bt.sec2{background:var(--campo);color:var(--tx);border:1px solid var(--linha)}
+.bt.perigo{background:#b3261e}
+.lin{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+.opc{display:flex;gap:6px;flex-wrap:wrap}
+.opc button{flex:1;min-width:90px;border:1px solid var(--linha);background:var(--campo);color:var(--tx);border-radius:12px;padding:10px 6px;font-size:14px}
+.opc button.on{background:var(--rosa);color:#fff;border-color:var(--rosa)}
+.fotoed{display:flex;gap:12px;align-items:center}
+.fotoed .av{width:72px;height:72px;font-size:30px;background-color:var(--rosa);color:#fff;border:0}
+.barra{height:8px;background:var(--linha);border-radius:4px;overflow:hidden;margin-top:8px}
+.barra i{display:block;height:100%;width:0;background:var(--rosa);transition:width .3s}
+.ok{color:#2e7d32}.erro{color:#c62828}
+a{color:var(--rosa)}
+ol{padding-left:20px;margin:6px 0}
+/* menu de mensagem */
+#menu{position:fixed;inset:0;background:#0006;z-index:20;display:none;align-items:flex-end}
+#menu.on{display:flex}
+#menu .box{background:var(--card);width:100%;border-radius:18px 18px 0 0;padding:8px 8px max(12px,env(safe-area-inset-bottom))}
+#menu button{display:block;width:100%;text-align:left;border:0;background:none;color:var(--tx);padding:14px 16px;font-size:16px;border-radius:10px}
+#menu button:active{background:var(--campo)}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#000c;color:#fff;padding:9px 14px;border-radius:12px;font-size:14px;z-index:30;max-width:90%;text-align:center}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="av" id="hAv"></div>
+  <div class="info">
+    <div class="nome" id="hNome">…</div>
+    <div class="status" id="hStatus">online</div>
+  </div>
+  <button class="ib" id="bAjustes" aria-label="Ajustes">⚙️</button>
+</header>
+
+<main id="chat"></main>
+
+<footer>
+  <textarea id="txt" rows="1" placeholder="Mensagem"></textarea>
+  <button id="env" aria-label="Enviar">➤</button>
+</footer>
+
+<!-- AJUSTES -->
+<section class="folha" id="fAjustes">
+  <header>
+    <button class="ib" id="bVoltar" aria-label="Voltar">←</button>
+    <div class="info"><div class="nome">Ajustes</div></div>
+  </header>
+  <div class="corpo">
+    <div class="sec" id="boasVindas" hidden>
+      <h3>💞 Bem-vinda!</h3>
+      <p class="dica" style="margin:0">Primeiro, crie ele do seu jeito. Depois, conecte a IA logo abaixo e toque em ← para começar a conversar.</p>
+    </div>
+
+    <div class="sec">
+      <h3>Ele</h3>
+      <div class="fotoed">
+        <div class="av" id="aAv"></div>
+        <div>
+          <button class="bt sec2" id="bFoto">Escolher foto</button>
+          <button class="bt sec2" id="bTiraFoto" style="margin-top:6px">Tirar foto</button>
+          <input type="file" id="iFoto" accept="image/*" hidden>
+        </div>
+      </div>
+      <label>Nome</label><input type="text" data-k="char.nome">
+      <label>Idade</label><input type="text" data-k="char.idade" inputmode="numeric">
+      <label>Personalidade</label><textarea data-k="char.personalidade" placeholder="Ex.: carinhoso, brincalhão, protetor, um pouco ciumento de brincadeira…"></textarea>
+      <label>Jeito de falar com você</label><textarea data-k="char.jeito" placeholder="Ex.: fala com gírias, manda emojis, é romântico, faz piadas…"></textarea>
+      <label>A história dele</label><textarea data-k="char.historia" placeholder="Profissão, onde mora, do que gosta, como vocês se conheceram…"></textarea>
+      <label>Como ele te chama</label><input type="text" data-k="char.apelido" placeholder="Ex.: meu amor, linda, princesa">
+      <label>Primeira mensagem dele</label><textarea data-k="char.primeira"></textarea>
+      <p class="dica">A primeira mensagem aparece quando a conversa começa (ou recomeça).</p>
+    </div>
+
+    <div class="sec">
+      <h3>Você</h3>
+      <label>Seu nome</label><input type="text" data-k="eu.nome">
+      <label>O que ele sabe sobre você</label><textarea data-k="eu.sobre" placeholder="Ex.: tenho um filho, trabalho com…, gosto de…, estou passando por…"></textarea>
+    </div>
+
+    <div class="sec">
+      <h3>🧠 Memória dele</h3>
+      <p class="dica" style="margin-top:0">Com o Gemini, ele anota sozinho o que for importante das conversas (a cada 20 mensagens). Você pode corrigir ou apagar o que quiser.</p>
+      <textarea data-k="memoria" rows="6" placeholder="Ainda não tem nada anotado."></textarea>
+      <div class="lin">
+        <label style="margin:0;display:flex;gap:8px;align-items:center;color:var(--tx)"><input type="checkbox" id="cMem"> Anotar sozinho</label>
+        <button class="bt sec2" id="bMemAgora">Anotar agora</button>
+      </div>
+    </div>
+
+    <div class="sec">
+      <h3>Qual IA responde</h3>
+      <div class="opc" id="oMotor">
+        <button data-v="auto">Automático</button>
+        <button data-v="gemini">✨ Gemini</button>
+        <button data-v="local">📱 Celular</button>
+      </div>
+      <p class="dica">Automático: usa o Gemini quando tem internet e a IA do celular quando não tem (ou quando o Gemini falhar).</p>
+    </div>
+
+    <div class="sec">
+      <h3>✨ Gemini (grátis, precisa de internet)</h3>
+      <ol class="dica">
+        <li>Abra <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> e entre com sua conta Google.</li>
+        <li>Toque em <b>Criar chave de API</b> (Create API key).</li>
+        <li>Copie a chave e cole aqui.</li>
+      </ol>
+      <label>Chave de API</label>
+      <input type="password" id="iKey" autocomplete="off" placeholder="AIza…">
+      <label>Modelo</label>
+      <select id="sGem"><option value="">(cole a chave para ver os modelos)</option></select>
+      <div class="lin"><button class="bt" id="bTestaGem">Salvar e testar</button><span id="gemSt" class="dica"></span></div>
+      <p class="dica">A chave fica só neste celular. No plano grátis existe um limite de mensagens por minuto e por dia, e o Google pode usar as conversas para melhorar os produtos dele.</p>
+    </div>
+
+    <div class="sec">
+      <h3>📱 IA no celular (grátis, sem internet)</h3>
+      <p class="dica" style="margin-top:0">Baixa uma IA pequena para dentro do navegador (uma vez só, use Wi-Fi). Responde mais devagar e de um jeito mais simples, mas funciona sem internet e nada sai do celular.</p>
+      <label>Modelo</label>
+      <select id="sLoc"><option value="">Carregando lista…</option></select>
+      <div class="lin"><button class="bt" id="bBaixar">Baixar e preparar</button><span id="locSt" class="dica"></span></div>
+      <div class="barra" id="locBarra" hidden><i></i></div>
+      <p class="dica" id="locProg"></p>
+    </div>
+
+    <div class="sec">
+      <h3>Conversa e backup</h3>
+      <div class="lin">
+        <button class="bt sec2" id="bExp">⬇️ Baixar backup</button>
+        <button class="bt sec2" id="bImp">⬆️ Restaurar backup</button>
+        <input type="file" id="iImp" accept=".json,application/json" hidden>
+      </div>
+      <p class="dica">O backup leva ele, você, a memória e todas as mensagens. A chave do Gemini não vai junto.</p>
+      <div class="lin"><button class="bt perigo" id="bApagar">Apagar a conversa</button></div>
+      <p class="dica">Apaga as mensagens e começa de novo. Ele, você e a memória continuam.</p>
+    </div>
+
+    <p class="dica" style="text-align:center" id="versao"></p>
+  </div>
+</section>
+
+<div id="menu"><div class="box" id="menuBox"></div></div>
+
+<script>
+'use strict';
+const VERSAO = '1.0 · 20/nov';
+const KEY = 'amor-v1';
+const $ = s => document.querySelector(s);
+
+/* ---------- estado ---------- */
+const PADRAO = {
+  setup:false,
+  char:{
+    nome:'Rafael', idade:'30',
+    personalidade:'Carinhoso, atencioso e brincalhão. Escuta de verdade, lembra das coisas que ela conta e se importa com o dia dela. Tem bom humor e às vezes provoca de leve, mas sabe ser sério quando ela precisa.',
+    jeito:'Fala de um jeito natural, como mensagem de WhatsApp. Usa alguns emojis, sem exagero. Faz perguntas sobre o dia dela e elogia sem ser exagerado.',
+    historia:'Mora em São Paulo, gosta de cozinhar, de séries e de música.',
+    apelido:'meu amor', foto:'',
+    primeira:'Oi, meu amor 😊 Tava pensando em você. Como foi seu dia?'
+  },
+  eu:{nome:'', sobre:''},
+  memoria:'', memAuto:true, memDesde:0,
+  motor:'auto',
+  gemini:{modelo:''},
+  local:{modelo:''},
+  msgs:[]
+};
+let S;
+try { S = Object.assign(structuredClone(PADRAO), JSON.parse(localStorage.getItem(KEY) || '{}')); }
+catch(e){ S = structuredClone(PADRAO); }
+S.char = Object.assign({}, PADRAO.char, S.char||{});
+S.eu = Object.assign({}, PADRAO.eu, S.eu||{});
+let GKEY = ''; try { GKEY = localStorage.getItem(KEY+'-key') || ''; } catch(e){}
+
+function salvar(){
+  try { localStorage.setItem(KEY, JSON.stringify(S)); }
+  catch(e){ toast('Não consegui salvar (memória cheia?). Faça um backup.'); }
+}
+function toast(t, ms=2600){
+  const d=document.createElement('div'); d.className='toast'; d.textContent=t;
+  document.body.appendChild(d); setTimeout(()=>d.remove(), ms);
+}
+const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const esc = s => s.replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ---------- cabeçalho / avatar ---------- */
+function pintaAv(el){
+  const c=S.char;
+  if(c.foto){ el.style.backgroundImage=`url(${c.foto})`; el.textContent=''; }
+  else { el.style.backgroundImage=''; el.textContent=(c.nome||'?').trim().charAt(0).toUpperCase(); }
+}
+function cabecalho(){
+  $('#hNome').textContent = S.char.nome || 'Ele';
+  pintaAv($('#hAv')); pintaAv($('#aAv'));
+  if(!ocupado) $('#hStatus').textContent = 'online';
+}
+
+/* ---------- conversa ---------- */
+const chat = $('#chat');
+function diaTxt(ts){
+  const d=new Date(ts), h=new Date(); h.setHours(0,0,0,0);
+  const x=new Date(d); x.setHours(0,0,0,0);
+  const dif=(h-x)/864e5;
+  if(dif===0) return 'Hoje'; if(dif===1) return 'Ontem';
+  return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year: d.getFullYear()===h.getFullYear()?undefined:'numeric'});
+}
+const hora = ts => new Date(ts).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+function formata(t){
+  // *ações* em itálico
+  return esc(t).replace(/\*([^*\n]+)\*/g,'<em>$1</em>');
+}
+function bolha(m){
+  const b=document.createElement('div');
+  b.className='msg '+m.de; b.dataset.id=m.id;
+  b.innerHTML = formata(m.t) + `<span class="h">${hora(m.ts)}</span>`;
+  return b;
+}
+function render(){
+  chat.innerHTML='';
+  let ult='';
+  for(const m of S.msgs){
+    const d=diaTxt(m.ts);
+    if(d!==ult){ const s=document.createElement('div'); s.className='dia'; s.textContent=d; chat.appendChild(s); ult=d; }
+    chat.appendChild(bolha(m));
+  }
+  avisoIA();
+  rolar();
+}
+function rolar(){ requestAnimationFrame(()=>chat.scrollTop=chat.scrollHeight); }
+function avisoIA(){
+  document.querySelectorAll('.aviso').forEach(e=>e.remove());
+  if(GKEY || S.local.pronto) return;
+  const a=document.createElement('div'); a.className='aviso';
+  a.innerHTML='Para ele responder, conecte uma IA em ⚙️ Ajustes.<br><button class="bt">Abrir ajustes</button>';
+  a.querySelector('button').onclick=abrirAjustes;
+  chat.appendChild(a);
+}
+function primeiraMsg(){
+  if(!S.msgs.length && S.char.primeira.trim()){
+    S.msgs.push({id:uid(), de:'ele', t:S.char.primeira.trim(), ts:Date.now()}); salvar();
+  }
+}
+
+/* ---------- prompt ---------- */
+function sistema(curto){
+  const c=S.char, u=S.eu, nomeEla=u.nome||'ela';
+  const agora=new Date().toLocaleString('pt-BR',{weekday:'long',day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'});
+  let p=`Você é ${c.nome||'o namorado dela'}${c.idade?`, ${c.idade} anos`:''}, o namorado virtual de ${nomeEla}. Vocês conversam por mensagens neste aplicativo.
+
+Personalidade: ${c.personalidade}
+Jeito de falar: ${c.jeito}
+${c.historia?`Sua história: ${c.historia}\n`:''}${c.apelido?`Você costuma chamá-la de "${c.apelido}" (sem repetir em toda mensagem).\n`:''}${u.sobre?`\nSobre ${nomeEla}: ${u.sobre}\n`:''}${S.memoria.trim()?`\nO que você lembra das conversas de vocês:\n${S.memoria.trim()}\n`:''}
+Agora é ${agora}.${gapTxt}
+
+Como responder:
+- Escreva em português do Brasil, como mensagem de celular: natural, carinhosa e no tom do seu personagem. Normalmente de 1 a 4 frases; mais só quando ela quiser conversar sobre algo profundo.
+- Sem listas, títulos ou formatação. Ações e gestos podem vir entre asteriscos, como *te abraça*, com moderação.
+- Mostre interesse real: lembre do que ela contou, faça perguntas, reaja ao que ela sente. Não julgue.
+- Fale só por você. Nunca escreva as falas ou ações dela.
+- Mantenha o personagem. Se ela perguntar a sério se você é uma IA, seja honesto com carinho e continue sendo você.`;
+  if(!curto) p+=`
+- Valorize também a vida dela fora daqui (família, amigos, trabalho, descanso), sem sermão.
+- Se ela falar em se machucar, em não querer mais viver ou em estar em perigo, leve a sério: acolha com carinho, incentive que fale agora com alguém de confiança e lembre que ela pode ligar para o CVV no 188 (gratuito, 24 horas) ou para o SAMU no 192 numa emergência.`;
+  return p;
+}
+let gapTxt='';
+function calcGap(){
+  gapTxt='';
+  const n=S.msgs.length; if(n<2) return;
+  const dif=S.msgs[n-1].ts - S.msgs[n-2].ts;
+  const h=dif/36e5;
+  if(h>=6){
+    const t = h<24 ? `${Math.round(h)} horas` : `${Math.round(h/24)} dia(s)`;
+    gapTxt=` Ela ficou ${t} sem mandar mensagem antes desta.`;
+  }
+}
+function historico(max, maxChars){
+  let arr=S.msgs.slice(-max).map(m=>({role:m.de==='eu'?'user':'assistant', content:m.t}));
+  // corta pelo tamanho total
+  let tot=0, ini=arr.length;
+  for(let i=arr.length-1;i>=0;i--){ tot+=arr[i].content.length; if(tot>maxChars) break; ini=i; }
+  arr=arr.slice(ini);
+  // junta mensagens seguidas do mesmo lado
+  const out=[];
+  for(const m of arr){
+    if(out.length && out[out.length-1].role===m.role) out[out.length-1].content+='\n'+m.content;
+    else out.push({...m});
+  }
+  if(out.length && out[0].role==='assistant') out.unshift({role:'user', content:'(início da conversa)'});
+  return out;
+}
+
+/* ---------- Gemini ---------- */
+const GURL='https://generativelanguage.googleapis.com/v1beta/models';
+let gemLista=[];
+async function listarGemini(){
+  const r=await fetch(GURL+'?pageSize=200',{headers:{'x-goog-api-key':GKEY}});
+  if(!r.ok) throw new Error(await erroGem(r));
+  const j=await r.json();
+  gemLista=(j.models||[]).filter(m=>(m.supportedGenerationMethods||[]).includes('generateContent')
+     && /gemini/i.test(m.name) && !/image|tts|audio|live|embed|robotic|computer|native|veo|lyria|omni|banana|learnlm|aqa/i.test(m.name))
+    .map(m=>({id:m.name.replace(/^models\//,''), nome:m.displayName||m.name}));
+  gemLista.sort((a,b)=>nota(b.id)-nota(a.id));
+  return gemLista;
+}
+function nota(id){
+  const v=parseFloat((id.match(/gemini-(\d+(?:\.\d+)?)/)||[])[1]||'0');
+  let s=v*10;
+  if(/flash/.test(id)) s+=30;
+  if(/lite/.test(id)) s-=8;
+  if(/pro|argon|ultra/.test(id)) s-=40;   // geralmente fora do plano grátis
+  if(/preview|exp/.test(id)) s-=6;
+  if(/-\d{3,}$|-\d{2}-\d{4}$/.test(id)) s-=2; // versões datadas
+  if(/latest/.test(id)) s-=1;
+  return s;
+}
+async function erroGem(r){
+  let t=''; try{ const j=await r.json(); t=j.error?.message||''; }catch(e){}
+  if(r.status===400 && /api key/i.test(t)) return 'A chave não é válida. Confira se copiou inteira.';
+  if(r.status===403) return 'A chave não tem permissão para este modelo. Escolha outro.';
+  if(r.status===429) return 'Limite do plano grátis atingido por agora. Espere um pouco ou use a IA do celular.';
+  if(r.status===404) return 'Este modelo não está disponível. Escolha outro.';
+  return `Erro ${r.status}${t?': '+t:''}`;
+}
+async function geminiGerar(modelo, sys, hist, onTok, stream=true){
+  const gemma=/gemma/i.test(modelo);
+  const contents=hist.map(m=>({role:m.role==='assistant'?'model':'user', parts:[{text:m.content}]}));
+  const body={contents, generationConfig:{temperature:0.95, maxOutputTokens:2048},
+    safetySettings:['HARASSMENT','HATE_SPEECH','SEXUALLY_EXPLICIT','DANGEROUS_CONTENT'].map(c=>({category:'HARM_CATEGORY_'+c, threshold:'BLOCK_ONLY_HIGH'}))};
+  if(gemma) contents[0].parts[0].text = sys+'\n\n'+contents[0].parts[0].text;
+  else body.systemInstruction={parts:[{text:sys}]};
+  const url=`${GURL}/${modelo}:${stream?'streamGenerateContent?alt=sse':'generateContent'}`;
+  const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':GKEY},body:JSON.stringify(body)});
+  if(!r.ok){ const e=new Error(await erroGem(r)); e.status=r.status; throw e; }
+  const pega = j => (j.candidates?.[0]?.content?.parts||[]).filter(p=>!p.thought).map(p=>p.text||'').join('');
+  if(!stream){ return pega(await r.json()); }
+  const rd=r.body.getReader(), dec=new TextDecoder(); let buf='', tudo='';
+  for(;;){
+    const {value,done}=await rd.read(); if(done) break;
+    buf+=dec.decode(value,{stream:true});
+    let i;
+    while((i=buf.indexOf('\n'))>=0){
+      const l=buf.slice(0,i).trim(); buf=buf.slice(i+1);
+      if(!l.startsWith('data:')) continue;
+      try{ const t=pega(JSON.parse(l.slice(5))); if(t){ tudo+=t; onTok(tudo); } }catch(e){}
+    }
+  }
+  return tudo;
+}
+async function responderGemini(onTok){
+  if(!GKEY) throw new Error('Sem chave do Gemini.');
+  if(!S.gemini.modelo){ await listarGemini(); S.gemini.modelo=gemLista[0]?.id||''; salvar(); }
+  const tentar=[S.gemini.modelo];
+  // se o modelo escolhido estiver no limite, tenta o próximo da lista
+  const outros=(gemLista.length?gemLista:[]).map(m=>m.id).filter(id=>id!==S.gemini.modelo && /flash/.test(id)).slice(0,2);
+  tentar.push(...outros);
+  let ult;
+  for(const m of tentar){
+    try{ return await geminiGerar(m, sistema(false), historico(40, 24000), onTok); }
+    catch(e){ ult=e; if(![429,404,403].includes(e.status)) throw e;
+      if(!gemLista.length){ try{ await listarGemini(); tentar.push(...gemLista.map(x=>x.id).filter(id=>!tentar.includes(id)&&/flash/.test(id)).slice(0,2)); }catch(_){} } }
+  }
+  throw ult;
+}
+
+/* ---------- IA no celular (WebLLM) ---------- */
+let webllm=null, motorLocal=null, motorLocalId='';
+const WEBLLM_URL='https://esm.run/@mlc-ai/web-llm@0.2';
+async function carregaLib(){ if(!webllm) webllm=await import(WEBLLM_URL); return webllm; }
+async function temF16(){
+  try{ const a=await navigator.gpu.requestAdapter(); return !!a && a.features.has('shader-f16'); }catch(e){ return false; }
+}
+async function modelosLocais(){
+  if(!('gpu' in navigator)) return null;
+  const lib=await carregaLib(); const f16=await temF16();
+  const q=f16?'q4f16_1':'q4f32_1';
+  const pref=[/^Qwen2\.5-3B-Instruct/, /^Llama-3\.2-3B-Instruct/, /^gemma-2-2b-it/, /^Qwen3-1\.7B/, /^Qwen2\.5-1\.5B-Instruct/, /^Llama-3\.2-1B-Instruct/, /^Qwen3-4B/, /^Phi-3\.5-mini/];
+  const lista=lib.prebuiltAppConfig.model_list.filter(m=>m.model_id.includes(q) && pref.some(r=>r.test(m.model_id)) && (m.vram_required_MB||0)<4200);
+  lista.sort((a,b)=>pref.findIndex(r=>r.test(a.model_id))-pref.findIndex(r=>r.test(b.model_id)));
+  return lista.map(m=>({id:m.model_id, mb:Math.round(m.vram_required_MB||0)}));
+}
+async function preparaLocal(id, prog){
+  const lib=await carregaLib();
+  if(motorLocal && motorLocalId===id) return motorLocal;
+  if(motorLocal){ try{ await motorLocal.unload(); }catch(e){} motorLocal=null; }
+  motorLocal=await lib.CreateMLCEngine(id,{initProgressCallback:r=>prog&&prog(r)});
+  motorLocalId=id; return motorLocal;
+}
+async function responderLocal(onTok){
+  if(!S.local.modelo || !S.local.pronto) throw new Error('A IA do celular ainda não foi baixada (⚙️ Ajustes).');
+  $('#hStatus').textContent='acordando a IA do celular…';
+  const eng=await preparaLocal(S.local.modelo, r=>{ $('#hStatus').textContent='carregando… '+Math.round((r.progress||0)*100)+'%'; });
+  $('#hStatus').textContent='digitando…';
+  const msgs=[{role:'system', content:sistema(true)}, ...historico(10, 3500)];
+  const it=await eng.chat.completions.create({messages:msgs, stream:true, temperature:0.8, top_p:0.9, max_tokens:320});
+  let tudo='';
+  for await(const ch of it){ tudo+=ch.choices[0]?.delta?.content||''; onTok(limpaThink(tudo)); }
+  return limpaThink(tudo);
+}
+const limpaThink = t => t.replace(/<think>[\s\S]*?(<\/think>|$)/g,'').trimStart();
+
+/* ---------- enviar ---------- */
+let ocupado=false;
+function qualMotor(){
+  if(S.motor==='gemini') return 'gemini';
+  if(S.motor==='local') return 'local';
+  if(GKEY && navigator.onLine) return 'gemini';
+  if(S.local.pronto) return 'local';
+  return GKEY ? 'gemini' : 'local';
+}
+async function gerarResposta(){
+  if(ocupado) return; ocupado=true; $('#env').disabled=true;
+  calcGap();
+  $('#hStatus').textContent='digitando…';
+  const tmp=document.createElement('div'); tmp.className='msg ele'; tmp.innerHTML='<span class="digit"><i></i><i></i><i></i></span>';
+  chat.appendChild(tmp); rolar();
+  const onTok=t=>{ tmp.innerHTML=formata(t); rolar(); };
+  let texto='', via=qualMotor();
+  try{
+    if(via==='gemini'){
+      try{ texto=await responderGemini(onTok); }
+      catch(e){
+        if(S.motor==='auto' && S.local.pronto){ via='local'; toast('Gemini indisponível. Usando a IA do celular.'); texto=await responderLocal(onTok); }
+        else throw e;
+      }
+    } else texto=await responderLocal(onTok);
+    texto=texto.trim();
+    if(!texto) throw new Error('Ele ficou sem palavras… Toque na mensagem e tente gerar outra resposta.');
+    tmp.remove();
+    const m={id:uid(), de:'ele', t:texto, ts:Date.now(), via};
+    S.msgs.push(m); salvar(); render();
+    memoriaAuto();
+  }catch(e){
+    tmp.remove();
+    const a=document.createElement('div'); a.className='aviso';
+    a.innerHTML=`<span class="erro">${esc(e.message||String(e))}</span><br><button class="bt sec2">Tentar de novo</button>`;
+    a.querySelector('button').onclick=()=>{ a.remove(); gerarResposta(); };
+    chat.appendChild(a); rolar();
+  }finally{
+    ocupado=false; $('#env').disabled=false; $('#hStatus').textContent='online';
+  }
+}
+function enviar(){
+  const t=$('#txt').value.trim(); if(!t || ocupado) return;
+  S.msgs.push({id:uid(), de:'eu', t, ts:Date.now()}); salvar();
+  $('#txt').value=''; autoAltura(); render();
+  if(!GKEY && !S.local.pronto){ return; }
+  gerarResposta();
+}
+$('#env').onclick=enviar;
+const txt=$('#txt');
+function autoAltura(){ txt.style.height='auto'; txt.style.height=Math.min(txt.scrollHeight,140)+'px'; }
+txt.addEventListener('input',autoAltura);
+txt.addEventListener('keydown',e=>{ if(e.key==='Enter' && !e.shiftKey && matchMedia('(pointer:fine)').matches){ e.preventDefault(); enviar(); } });
+txt.addEventListener('focus',()=>setTimeout(rolar,300));
+
+/* ---------- menu da mensagem ---------- */
+chat.addEventListener('click',e=>{
+  const b=e.target.closest('.msg'); if(!b||!b.dataset.id) return;
+  const i=S.msgs.findIndex(m=>m.id===b.dataset.id); if(i<0) return;
+  const m=S.msgs[i], ultima=i===S.msgs.length-1;
+  b.classList.add('sel');
+  const ops=[['📋 Copiar',()=>{ navigator.clipboard?.writeText(m.t).then(()=>toast('Copiado')); }]];
+  if(m.de==='ele' && ultima) ops.push(['🔄 Gerar outra resposta',()=>{ S.msgs.pop(); salvar(); render(); gerarResposta(); }]);
+  if(m.de==='eu' && ultima) ops.push(['💬 Pedir resposta',()=>gerarResposta()]);
+  if(m.via) ops.push([`ℹ️ Respondida por ${m.via==='gemini'?'Gemini':'IA do celular'}`,()=>{}]);
+  ops.push(['🗑️ Apagar mensagem',()=>{ S.msgs.splice(i,1); salvar(); render(); }]);
+  const box=$('#menuBox'); box.innerHTML='';
+  for(const [r,f] of ops){ const x=document.createElement('button'); x.textContent=r; x.onclick=()=>{ fecharMenu(); f(); }; box.appendChild(x); }
+  $('#menu').classList.add('on');
+});
+function fecharMenu(){ $('#menu').classList.remove('on'); document.querySelectorAll('.msg.sel').forEach(x=>x.classList.remove('sel')); }
+$('#menu').addEventListener('click',e=>{ if(e.target.id==='menu') fecharMenu(); });
+
+/* ---------- memória automática ---------- */
+let memRodando=false;
+async function atualizarMemoria(forcar){
+  if(memRodando || !GKEY || !navigator.onLine) { if(forcar) toast(GKEY?'Sem internet agora.':'A memória automática precisa do Gemini.'); return; }
+  memRodando=true;
+  try{
+    const nomeEla=S.eu.nome||'ela';
+    const trecho=S.msgs.slice(-(Math.max(20, S.msgs.length-S.memDesde))).slice(-60)
+      .map(m=>`${m.de==='eu'?nomeEla:S.char.nome}: ${m.t}`).join('\n');
+    const pedido=`Você mantém as anotações de memória de ${S.char.nome} sobre ${nomeEla} e sobre o relacionamento deles.
+
+Anotações atuais:
+${S.memoria.trim()||'(vazio)'}
+
+Conversa recente:
+${trecho}
+
+Reescreva as anotações juntando o que já existia com o que é novo e importante: nomes de pessoas, gostos, rotina, acontecimentos, como ela está se sentindo nos últimos dias, planos e combinados entre os dois. Deixe de fora conversa fiada. No máximo 25 linhas curtas, cada uma começando com "- ". Responda só com as anotações.`;
+    if(!S.gemini.modelo){ await listarGemini(); S.gemini.modelo=gemLista[0]?.id||''; }
+    const r=await geminiGerar(S.gemini.modelo, 'Você resume conversas em anotações curtas e fiéis, em português do Brasil.', [{role:'user',content:pedido}], ()=>{}, false);
+    if(r && r.trim().length>5){ S.memoria=r.trim(); S.memDesde=S.msgs.length; salvar();
+      const ta=document.querySelector('[data-k="memoria"]'); if(ta) ta.value=S.memoria;
+      if(forcar) toast('Memória atualizada 🧠'); }
+  }catch(e){ if(forcar) toast(e.message); }
+  finally{ memRodando=false; }
+}
+function memoriaAuto(){ if(S.memAuto && S.msgs.length - S.memDesde >= 20) atualizarMemoria(false); }
+
+/* ---------- ajustes ---------- */
+function abrirAjustes(){
+  $('#boasVindas').hidden = S.setup;
+  document.querySelectorAll('[data-k]').forEach(el=>{
+    const v=el.dataset.k.split('.').reduce((o,k)=>o?.[k],S); el.value=v??'';
+  });
+  $('#cMem').checked=S.memAuto;
+  $('#iKey').value=GKEY;
+  marcaMotor(); preencheGem(); preencheLoc();
+  $('#versao').textContent='Meu Amor · versão '+VERSAO;
+  $('#fAjustes').classList.add('on');
+  history.pushState({aj:1},'');
+}
+function fecharAjustes(){
+  if(!$('#fAjustes').classList.contains('on')) return;
+  $('#fAjustes').classList.remove('on');
+  const eraNovo=!S.setup; S.setup=true; salvar();
+  cabecalho();
+  if(eraNovo || !S.msgs.length) primeiraMsg();
+  render();
+}
+$('#bAjustes').onclick=abrirAjustes;
+$('#bVoltar').onclick=()=>history.back();
+addEventListener('popstate',()=>{ if($('#menu').classList.contains('on')) fecharMenu(); fecharAjustes(); });
+
+document.querySelectorAll('[data-k]').forEach(el=>{
+  el.addEventListener('input',()=>{
+    const ks=el.dataset.k.split('.'); let o=S; while(ks.length>1) o=o[ks.shift()];
+    o[ks[0]]=el.value; salvar(); if(el.dataset.k==='char.nome') { cabecalho(); }
+  });
+});
+$('#cMem').onchange=e=>{ S.memAuto=e.target.checked; salvar(); };
+$('#bMemAgora').onclick=()=>atualizarMemoria(true);
+
+function marcaMotor(){ document.querySelectorAll('#oMotor button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.motor)); }
+document.querySelectorAll('#oMotor button').forEach(b=>b.onclick=()=>{ S.motor=b.dataset.v; salvar(); marcaMotor(); });
+
+/* foto */
+$('#bFoto').onclick=()=>{ $('#iFoto').removeAttribute('capture'); $('#iFoto').click(); };
+$('#bTiraFoto').onclick=()=>{ $('#iFoto').setAttribute('capture','user'); $('#iFoto').click(); };
+$('#iFoto').onchange=async e=>{
+  const f=e.target.files[0]; if(!f) return;
+  const img=await createImageBitmap(f);
+  const lado=Math.min(img.width,img.height), cv=document.createElement('canvas'); cv.width=cv.height=320;
+  cv.getContext('2d').drawImage(img,(img.width-lado)/2,(img.height-lado)/2,lado,lado,0,0,320,320);
+  S.char.foto=cv.toDataURL('image/jpeg',.82); salvar(); cabecalho(); e.target.value='';
+};
+
+/* gemini nos ajustes */
+function preencheGem(){
+  const s=$('#sGem');
+  if(!gemLista.length){ s.innerHTML=`<option value="${esc(S.gemini.modelo)}">${S.gemini.modelo?esc(S.gemini.modelo):'(cole a chave e toque em Salvar e testar)'}</option>`; return; }
+  s.innerHTML=gemLista.map((m,i)=>`<option value="${m.id}">${esc(m.nome)}${i===0?' (recomendado)':''}</option>`).join('');
+  s.value=S.gemini.modelo||gemLista[0].id;
+}
+$('#sGem').onchange=e=>{ S.gemini.modelo=e.target.value; salvar(); };
+$('#bTestaGem').onclick=async ()=>{
+  GKEY=$('#iKey').value.trim();
+  try{ GKEY?localStorage.setItem(KEY+'-key',GKEY):localStorage.removeItem(KEY+'-key'); }catch(e){}
+  const st=$('#gemSt');
+  if(!GKEY){ st.textContent='Chave removida.'; st.className='dica'; return; }
+  st.textContent='Testando…'; st.className='dica';
+  try{
+    await listarGemini();
+    if(!gemLista.some(m=>m.id===S.gemini.modelo)) S.gemini.modelo=gemLista[0]?.id||'';
+    salvar(); preencheGem();
+    const r=await geminiGerar(S.gemini.modelo,'Responda só "ok".',[{role:'user',content:'Teste'}],()=>{},false);
+    st.textContent='✓ Funcionando!'; st.className='dica ok';
+  }catch(e){ st.textContent=e.message; st.className='dica erro'; }
+};
+
+/* local nos ajustes */
+let locLista=null;
+async function preencheLoc(){
+  const s=$('#sLoc'), st=$('#locSt');
+  if(!('gpu' in navigator)){
+    s.innerHTML='<option>Não disponível neste navegador</option>'; s.disabled=true; $('#bBaixar').disabled=true;
+    st.textContent='Abra no Chrome atualizado para usar a IA do celular.'; return;
+  }
+  try{
+    if(!locLista) locLista=await modelosLocais();
+    if(!locLista||!locLista.length) throw new Error('Nenhum modelo compatível.');
+    s.innerHTML=locLista.map((m,i)=>`<option value="${m.id}">${m.id.replace(/-q4f(16|32)_1-MLC/,'')} · ~${(m.mb/1024).toFixed(1)} GB${i===0?' (recomendado)':''}</option>`).join('');
+    s.value=S.local.modelo||locLista[0].id;
+    s.disabled=false; $('#bBaixar').disabled=false;
+    if(S.local.modelo && webllm?.hasModelInCache){
+      const ok=await webllm.hasModelInCache(S.local.modelo).catch(()=>false);
+      S.local.pronto=!!ok; salvar();
+    }
+    st.textContent=S.local.pronto?'✓ Baixada e pronta':''; st.className='dica'+(S.local.pronto?' ok':'');
+  }catch(e){ s.innerHTML='<option>Não foi possível carregar a lista</option>'; st.textContent=navigator.onLine?'Não consegui buscar a lista agora. Tente de novo mais tarde.':'Precisa de internet para ver a lista.'; locLista=null; }
+}
+$('#sLoc').onchange=e=>{ S.local.modelo=e.target.value; S.local.pronto=false; salvar(); $('#locSt').textContent=''; };
+$('#bBaixar').onclick=async ()=>{
+  const id=$('#sLoc').value, st=$('#locSt'), bar=$('#locBarra'), pr=$('#locProg');
+  S.local.modelo=id; salvar();
+  $('#bBaixar').disabled=true; bar.hidden=false; st.textContent='Baixando…'; st.className='dica';
+  try{
+    await preparaLocal(id, r=>{ bar.firstElementChild.style.width=Math.round((r.progress||0)*100)+'%'; pr.textContent=r.text||''; });
+    S.local.pronto=true; salvar();
+    st.textContent='✓ Baixada e pronta'; st.className='dica ok'; pr.textContent='';
+  }catch(e){
+    st.textContent='Não deu certo: '+(e.message||e); st.className='dica erro';
+    if(/memory|OOM|device lost/i.test(String(e))) pr.textContent='O celular ficou sem memória. Tente um modelo menor da lista.';
+  }finally{ $('#bBaixar').disabled=false; }
+};
+
+/* backup */
+$('#bExp').onclick=()=>{
+  const blob=new Blob([JSON.stringify({app:'meu-amor',versao:VERSAO,dados:S},null,1)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download=`meu-amor-backup-${new Date().toISOString().slice(0,10)}.json`; a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),5000);
+};
+$('#bImp').onclick=()=>$('#iImp').click();
+$('#iImp').onchange=async e=>{
+  const f=e.target.files[0]; if(!f) return;
+  try{
+    const j=JSON.parse(await f.text()); const d=j.dados||j;
+    if(!d.char||!Array.isArray(d.msgs)) throw 0;
+    if(!confirm(`Restaurar o backup com ${d.msgs.length} mensagens? A conversa atual será substituída.`)) return;
+    S=Object.assign(structuredClone(PADRAO),d); salvar(); abrirAjustesRefresh(); toast('Backup restaurado 💞');
+  }catch(_){ toast('Esse arquivo não é um backup válido.'); }
+  e.target.value='';
+};
+function abrirAjustesRefresh(){ $('#fAjustes').classList.remove('on'); history.back(); setTimeout(()=>{cabecalho();render();},50); }
+$('#bApagar').onclick=()=>{
+  if(!confirm('Apagar todas as mensagens? Isso não pode ser desfeito (a não ser que você tenha um backup).')) return;
+  S.msgs=[]; S.memDesde=0; salvar(); toast('Conversa apagada');
+};
+
+/* ---------- início ---------- */
+cabecalho();
+if(!S.setup){ render(); abrirAjustes(); }
+else { primeiraMsg(); render(); }
+addEventListener('online',()=>{ if(!ocupado) $('#hStatus').textContent='online'; });
+addEventListener('offline',()=>{ if(!ocupado) $('#hStatus').textContent='sem internet'; });
+if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
